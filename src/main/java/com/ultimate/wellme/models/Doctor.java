@@ -17,12 +17,11 @@ public class Doctor extends User{
 
     private String firstName;
     private String lastName;
-    private String phoneNumber;
+    private String medicalLicenseNumber;
     private List<String> specializations;
     private String clinicAddress;
     private int yearsOfExperience;
     private String gender;
-    private int age;
     private String domain;
     private int credits;
 

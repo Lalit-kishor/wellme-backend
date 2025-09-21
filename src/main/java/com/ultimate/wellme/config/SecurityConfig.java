@@ -19,6 +19,7 @@ public class SecurityConfig {
     private static final String[] PUBLIC_ENDPOINTS = {
         "/signup",
         "/login",
+        "/signUpDoctor",
         "/features",
         "/contacts",
         "/pricing",

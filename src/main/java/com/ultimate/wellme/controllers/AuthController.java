@@ -1,9 +1,15 @@
 package com.ultimate.wellme.controllers;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.ultimate.wellme.DTO.DoctorRegistrationDTO;
 import com.ultimate.wellme.models.Doctor;
 import com.ultimate.wellme.models.Patient;
 import com.ultimate.wellme.models.User;
@@ -16,30 +22,56 @@ public class AuthController {
     private AppService appService;
 
     @PostMapping("/signup")
-    public String signup(@RequestParam String email, @RequestParam String password, @RequestParam String password_repeat, @RequestParam String role) {
+    public String signup(@RequestParam String email, @RequestParam String password, @RequestParam String password_repeat) {
         if (!password.equals(password_repeat)) {
             return "redirect:/signup?error=passwords_do_not_match";
         }
         // Proceed with signup logic
-        User user;
-        System.out.println("Role selected: " + role);
+        User user = new Patient();
 
-        if(role.equals("DOCTOR")) {
-            user = new Doctor();
-        } else {
-            user = new Patient();
-        }
+        // System.out.println("Role selected: " + role);
+
+        // if(role.equals("DOCTOR")) {
+        //     user = new Doctor();
+        // } else if(role.equals("PATIENT")) {
+        //     user = new Patient();
+        // } else {
+        //     user = new Admin();
+        // }
 
         user.setEmail(email);
         user.setPassword(password);
-        user.setRole(role);
+        user.setRole(User.Role.valueOf("PATIENT"));
         appService.saveUser(user);
         
         return "redirect:/signup?success";
     }
 
     @PostMapping("/login")
-    public String login(@RequestParam String email, @RequestParam String password, @RequestParam String role) {
-        return "redirect:/login?success";
+    public String login(@RequestParam String email, @RequestParam String password) {
+        return "success";
+    }
+
+    @PostMapping("/signUpDoctor")
+    public String registerDoctor(@ModelAttribute DoctorRegistrationDTO dto) {
+
+        List<String> specializationList = Arrays.stream(dto.getSpecializations().split(",")).map(String::trim).collect(Collectors.toList());
+
+        User user = new Doctor();
+        user.setEmail(dto.getEmail());
+        user.setPassword(dto.getPassword());
+        user.setRole(User.Role.DOCTOR);
+        ((Doctor) user).setFirstName(dto.getFirstName());
+        ((Doctor) user).setLastName(dto.getLastName());
+        ((Doctor) user).setMedicalLicenseNumber(dto.getMedicalLicenseNumber());
+        ((Doctor) user).setSpecializations(specializationList);
+        ((Doctor) user).setClinicAddress(dto.getClinicAddress());
+        ((Doctor) user).setYearsOfExperience(dto.getYearsOfExperience());
+        ((Doctor) user).setGender(dto.getGender());
+        ((Doctor) user).setDomain(dto.getDomain());
+
+        appService.saveUser(user);
+
+        return "redirect:/signUpDoctor?success";
     }
 }

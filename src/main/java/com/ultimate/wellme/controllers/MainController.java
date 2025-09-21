@@ -41,4 +41,9 @@ public class MainController {
     public String forgotPassword() {
         return "forgotPassword";
     }
+
+    @RequestMapping("/signUpDoctor")
+    public String registerDoctor() {
+        return "doctorRegistration";
+    }
 }
