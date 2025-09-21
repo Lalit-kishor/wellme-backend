@@ -2,6 +2,8 @@ package com.ultimate.wellme.models;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -25,11 +27,13 @@ public abstract class User {
 
     private String password;
 
-    private String role;
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     public enum Role {
         PATIENT,
-        DOCTOR
+        DOCTOR,
+        ADMIN
     }
 
 }
