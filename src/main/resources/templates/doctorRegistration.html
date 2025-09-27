@@ -19,7 +19,7 @@
                         <li class="nav-item"><a class="nav-link" href="/features">Features</a></li>
                         <li class="nav-item"><a class="nav-link" href="/pricing">Pricing</a></li>
                         <li class="nav-item"><a class="nav-link" href="/contacts">Contact</a></li>
-                    </ul><a class="btn btn-warning shadow" role="button" href="/signUpDoctor">Join As Doctor</a>
+                    </ul><a class="btn btn-warning shadow" role="button" href="/signup">Sign Up</a>
                 </div>
             </div>
         </nav>
@@ -27,28 +27,62 @@
             <div class="row">
                 <div class="col-md-8 offset-md-2">
                     <h2 class="display-6 fw-bold mb-5 text-center"><span class="underline pb-1"><strong>Sign up</strong></span></h2>
-                    <form method="post" data-bs-theme="light" action="/signUpDoctor">
+                    <form method="post" data-bs-theme="light" action="/signUpDoctor" enctype="multipart/form-data">
                         <div class="row">
                             <div class="col-md-6">
-                                <div class="mb-3"><input class="shadow-sm form-control" type="email" name="email" placeholder="Email" required></div>
-                                <div class="mb-3"><input class="shadow-sm form-control" type="password" name="password" placeholder="Password" required></div>
-                                <div class="mb-3"><input class="shadow-sm form-control" type="password" name="password_repeat" placeholder="Repeat Password" required></div>
-                                <div class="mb-3"><input class="shadow-sm form-control" type="text" name="firstName" placeholder="First Name" required></div>
-                                <div class="mb-3"><input class="shadow-sm form-control" type="text" name="lastName" placeholder="Last Name (Optional)"></div>
-                                <div class="mb-3"><input class="shadow-sm form-control" type="text" name="medicalLicenseNumber" placeholder="Medical License Number" required></div>
                                 <div class="mb-3">
-                                    <label for="specializations" class="form-label">Specializations (comma separated)</label>
-                                    <input class="shadow-sm form-control" type="text" name="specializations" id="specializations" placeholder="e.g. Cardiology, Neurology" required>
+                                    <label class="form-label fw-semibold text-muted mb-2" style="font-size: 14px;">Email Address</label>
+                                    <input class="form-control bg-light shadow-sm rounded-2 px-3 py-2" type="email" name="email" placeholder="Enter your email address" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-semibold text-muted mb-2" style="font-size: 14px;">Password</label>
+                                    <input class="form-control bg-light shadow-sm rounded-2 px-3 py-2" type="password" name="password" placeholder="Create a secure password" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-semibold text-muted mb-2" style="font-size: 14px;">Confirm Password</label>
+                                    <input class="form-control bg-light shadow-sm rounded-2 px-3 py-2" type="password" name="password_repeat" placeholder="Repeat your password" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-semibold text-muted mb-2" style="font-size: 14px;">First Name</label>
+                                    <input class="form-control bg-light shadow-sm rounded-2 px-3 py-2" type="text" name="firstName" placeholder="Enter your first name" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-semibold text-muted mb-2" style="font-size: 14px;">Last Name <span class="text-muted">(Optional)</span></label>
+                                    <input class="form-control bg-light shadow-sm rounded-2 px-3 py-2" type="text" name="lastName" placeholder="Enter your last name">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-semibold text-muted mb-2" style="font-size: 14px;">Medical License Number</label>
+                                    <input class="form-control bg-light shadow-sm rounded-2 px-3 py-2" type="text" name="medicalLicenseNumber" placeholder="Enter your license number" required>
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <div class="mb-3"><input class="shadow-sm form-control" type="text" name="clinicAddress" placeholder="Clinic Address (Optional)"></div>
-                                <div class="mb-3"><input class="shadow-sm form-control" type="number" name="yearsOfExperience" placeholder="Years of Experience" min="0" required></div>
-                                <div class="mb-3"><input class="shadow-sm form-control" type="text" name="gender" placeholder="Gender" required></div>
-                                <div class="mb-3"><input class="shadow-sm form-control" type="text" name="domain" placeholder="Domain (Optional)"></div>
+                                <div class="mb-3">
+                                    <label for="specializations" class="form-label fw-semibold text-muted mb-2" style="font-size: 14px;">Specializations</label>
+                                    <input class="form-control bg-light shadow-sm rounded-2 px-3 py-2" type="text" name="specializations" id="specializations" placeholder="e.g. Cardiology, Neurology" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-semibold text-muted mb-2" style="font-size: 14px;">Clinic Address</label>
+                                    <input class="form-control bg-light shadow-sm rounded-2 px-3 py-2" type="text" name="clinicAddress" placeholder="Enter your clinic address" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-semibold text-muted mb-2" style="font-size: 14px;">Years of Experience</label>
+                                    <input class="form-control bg-light shadow-sm rounded-2 px-3 py-2" type="number" name="yearsOfExperience" placeholder="Enter years of experience" min="0" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-semibold text-muted mb-2" style="font-size: 14px;">Gender</label>
+                                    <input class="form-control bg-light shadow-sm rounded-2 px-3 py-2" type="text" name="gender" placeholder="Enter your gender" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-semibold text-muted mb-2" style="font-size: 14px;">Languages</label>
+                                    <input class="form-control bg-light shadow-sm rounded-2 px-3 py-2" type="text" name="languages" placeholder="e.g. English, Hindi, Spanish" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="profilePicture" class="form-label fw-semibold text-muted mb-2" style="font-size: 14px;">Profile Picture</label>
+                                    <input class="form-control bg-light shadow-sm rounded-2 px-3 py-2" type="file" name="profilePicture" id="profilePicture" accept="image/*" required>
+                                </div>
                             </div>
                         </div>
-                        <div class="mb-5 text-center"><button class="btn btn-primary shadow" type="submit">Create account</button></div>
+                        <div class="mb-5 text-center"><button class="btn btn-primary btn-lg rounded-pill px-5 py-3 shadow-sm" type="submit" style="font-size: 18px; font-weight: 600;">Create Account</button></div>
                     </form>
                     <p class="text-muted text-center">Have an account? <a href="/login">Log in&nbsp;<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-arrow-narrow-right">
                                 <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
