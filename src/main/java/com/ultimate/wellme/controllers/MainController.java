@@ -1,5 +1,6 @@
 package com.ultimate.wellme.controllers;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -45,5 +46,19 @@ public class MainController {
     @RequestMapping("/signUpDoctor")
     public String registerDoctor() {
         return "doctorRegistration";
+    }
+
+    @RequestMapping("/blogPostList")
+    @PreAuthorize("isAuthenticated()")
+    public String blogPostList() {
+        System.out.println("Accessed blog post list page");
+        return "blogPostList";
+    }
+
+    @RequestMapping("/catalog-page")
+    @PreAuthorize("isAuthenticated()")
+    public String catalogPage() {
+        System.out.println("Accessed catalog page");
+        return "catalog-page";
     }
 }

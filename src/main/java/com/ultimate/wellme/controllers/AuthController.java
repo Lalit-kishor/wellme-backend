@@ -44,13 +44,10 @@ public class AuthController {
         user.setRole(User.Role.valueOf("PATIENT"));
         appService.saveUser(user);
         
-        return "redirect:/signup?success";
+        return "catalog-page";
     }
 
-    @PostMapping("/login")
-    public String login(@RequestParam String email, @RequestParam String password) {
-        return "success";
-    }
+
 
     @PostMapping("/signUpDoctor")
     public String registerDoctor(@ModelAttribute DoctorRegistrationDTO dto) {
