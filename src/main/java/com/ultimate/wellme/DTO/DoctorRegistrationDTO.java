@@ -1,5 +1,7 @@
 package com.ultimate.wellme.DTO;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,5 +21,6 @@ public class DoctorRegistrationDTO {
     private String clinicAddress;
     private int yearsOfExperience;
     private String gender;
-    private String domain;
+    private String languages; // Comma-separated string
+    private MultipartFile profilePicture;
 }
