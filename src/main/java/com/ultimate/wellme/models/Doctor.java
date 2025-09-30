@@ -22,7 +22,7 @@ public class Doctor extends User{
     private String clinicAddress;
     private int yearsOfExperience;
     private String gender;
-    private String domain;
+    private List<String> languages;
     private int credits;
 
     @OneToMany(mappedBy = "doctor")
