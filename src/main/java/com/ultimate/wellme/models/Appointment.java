@@ -1,5 +1,7 @@
 package com.ultimate.wellme.models;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,9 +36,9 @@ public class Appointment {
     @JoinColumn(name = "doctorId")
     private User doctor;
 
-    private String date;
-    private String startTime;
-    private String duration;
+    private LocalDate date;
+    private LocalTime startTime;
+    private LocalTime duration;
     private String type; // e.g., "In-Person" or "Virtual"
 
     @OneToOne

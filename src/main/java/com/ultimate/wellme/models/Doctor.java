@@ -24,6 +24,7 @@ public class Doctor extends User{
     private String gender;
     private List<String> languages;
     private int credits;
+    private int consultationFee;
 
     @OneToMany(mappedBy = "doctor")
     private List<Schedule> schedules = new ArrayList<>();

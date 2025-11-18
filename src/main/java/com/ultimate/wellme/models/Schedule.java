@@ -1,5 +1,7 @@
 package com.ultimate.wellme.models;
 
+import java.time.LocalTime;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -26,7 +28,7 @@ public class Schedule {
     private User doctor;
 
     private String day;
-    private String startTime;
+    private LocalTime startTime;
     private boolean isAvailable;
 
     @OneToOne(mappedBy = "schedule")

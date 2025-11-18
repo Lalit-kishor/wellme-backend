@@ -1,5 +1,7 @@
 package com.ultimate.wellme.models;
 
+import java.time.LocalDate;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -26,6 +28,6 @@ public class Transaction {
 
     private String status; 
     private double amount;
-    private String date; // Consider using LocalDate for better date handling
+    private LocalDate date; // Consider using LocalDate for better date handling
     private String paymentMethod; // e.g., "Credit Card", "PayPal"
 }

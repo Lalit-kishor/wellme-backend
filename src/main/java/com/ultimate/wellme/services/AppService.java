@@ -19,9 +19,10 @@ public class AppService implements UserDetailsService{
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-
+        System.out.println("In loadUserByUsername");
         User user = userRepo.findByEmail(username);
-        if(user != null){
+
+        if(user!=null){
             return new UserPrincipal(user);
         }
 
