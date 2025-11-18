@@ -4,10 +4,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.ultimate.wellme.DTO.DoctorRegistrationDTO;
@@ -17,6 +21,10 @@ import com.ultimate.wellme.models.Patient;
 import com.ultimate.wellme.models.User;
 import com.ultimate.wellme.services.AppService;
 import com.ultimate.wellme.services.CloudinaryService;
+import com.ultimate.wellme.services.JwtService;
+
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
 public class AuthController {
@@ -27,6 +35,12 @@ public class AuthController {
     @Autowired
     private CloudinaryService cloudinaryService;
 
+    @Autowired
+    public AuthenticationManager authenticationManager;
+
+    @Autowired
+    public JwtService jwtService;
+
     @PostMapping("/signup")
     public String signup(@RequestParam String email, @RequestParam String password, @RequestParam String password_repeat) {
         if (!password.equals(password_repeat)) {
@@ -35,22 +49,12 @@ public class AuthController {
         // Proceed with signup logic
         User user = new Patient();
 
-        // System.out.println("Role selected: " + role);
-
-        // if(role.equals("DOCTOR")) {
-        //     user = new Doctor();
-        // } else if(role.equals("PATIENT")) {
-        //     user = new Patient();
-        // } else {
-        //     user = new Admin();
-        // }
-
         user.setEmail(email);
         user.setPassword(password);
         user.setRole(User.Role.valueOf("PATIENT"));
         appService.saveUser(user);
         
-        return "catalog-page";
+        return "redirect:/login?success=registered";
     }
 
 
@@ -73,6 +77,7 @@ public class AuthController {
         ((Doctor) user).setYearsOfExperience(dto.getYearsOfExperience());
         ((Doctor) user).setGender(dto.getGender());
         ((Doctor) user).setLanguages(languageList);
+        ((Doctor) user).setConsultationFee(dto.getConsultationFee());
 
         // upload image to Cloudinary
         try {
@@ -91,6 +96,35 @@ public class AuthController {
 
         appService.saveUser(user);
 
-        return "redirect:/signUpDoctor?success";
+        return "redirect:/login?success=registered";
+    }
+
+    @PostMapping("/login")
+    @ResponseBody
+    public String login(@RequestParam String email, @RequestParam String password, HttpServletResponse response) {
+
+        try {
+            
+            Authentication authentication = authenticationManager
+                    .authenticate(new UsernamePasswordAuthenticationToken(email, password));
+
+            if (authentication.isAuthenticated()) {
+                String jwtToken = jwtService.generateToken(email);
+
+                Cookie cookie = new Cookie("jwt", jwtToken);
+                cookie.setHttpOnly(true);
+                cookie.setSecure(false);
+                cookie.setPath("/");
+                response.addCookie(cookie);
+
+                return jwtToken;
+            }
+
+        } catch (Exception e) {
+            return e.getMessage();
+        }
+        
+
+        return "Login Failed";
     }
 }
