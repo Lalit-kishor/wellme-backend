@@ -87,164 +87,46 @@
                         <div class="col-md-9">
                             <div class="doctors">
                                 <div class="row g-3">
+
+                                    <div th:if="${#lists.isEmpty(doctorList)}" class="text-center py-5">
+                                        <h4 class="text-muted">No doctors available at the moment</h4>
+                                        <p class="text-muted">Please check back later</p>
+                                    </div>
+
+                                    <div th:unless="${#lists.isEmpty(doctorList)}">
                                     <!-- Doctor 1 -->
-                                    <div class="col-12">
-                                        <div class="card border-0 shadow-sm p-4">
-                                            <div class="row align-items-center">
-                                                <div class="col-md-2">
-                                                    <img src="https://via.placeholder.com/100x100/4A90E2/FFFFFF?text=Dr.+S" 
-                                                         class="rounded-circle img-fluid" 
-                                                         alt="Dr. Siva Anoop Yella" 
-                                                         style="width: 80px; height: 80px; object-fit: cover;">
-                                                </div>
-                                                <div class="col-md-7">
-                                                    <h5 class="card-title mb-1">Dr. Siva Anoop Yella</h5>
-                                                    <p class="text-muted mb-1">8 years of Experience</p>
-                                                    <p class="text-muted mb-1">MBBS, MD - Psychiatry</p>
-                                                    <p class="text-muted mb-2">Medicover Hospitals, Hyderabad</p>
-                                                    <div class="d-flex align-items-center mb-2">
-                                                        <span class="badge bg-success me-1">4.5 <img src="assets/img/star.svg" width="12"></span>
-                                                        <small class="text-muted ms-2">2376 Patient Stories</small>
+                                        <div class="col-12" th:each="doctor: ${doctorList}">
+                                            <div class="card border-0 shadow-sm p-4">
+                                                <div class="row align-items-center">
+                                                    <div class="col-md-2">
+                                                        <img th:src="${doctor.profileImage != null ? doctor.profileImage.imageUrl : 'https://via.placeholder.com/100x100/4A90E2/FFFFFF?text=Dr.+S'}" 
+                                                            class="rounded-circle img-fluid" 
+                                                            th:alt="${'Dr.' + doctor.firstName + ' ' + doctor.lastName}" 
+                                                            style="width: 80px; height: 80px; object-fit: cover;">
                                                     </div>
-                                                    <a href="#" class="text-primary text-decoration-none fw-bold">View Profile</a>
-                                                </div>
-                                                <div class="col-md-3 text-end">
-                                                    <div class="mb-3">
-                                                        <small class="text-muted">Consultation Fee</small>
-                                                        <h4 class="text-success mb-0">₹ 499/-</h4>
+                                                    <div class="col-md-7">
+                                                        <h5 class="card-title mb-1" th:text="${'Dr. ' + doctor.firstName + ' ' + doctor.lastName}">Doctor Name</h5>
+                                                        <p class="text-muted mb-1" th:text="${doctor.yearsOfExperience + ' years of Experience'}">Experience</p>
+                                                        <p class="text-muted mb-1" th:text="${doctor.specializations != null and !doctor.specializations.isEmpty() ? #strings.listJoin(doctor.specializations, ', ') : 'General Practitioner'}">Specializations</p>
+                                                        <p class="text-muted mb-2" th:text="${doctor.clinicAddress ?: 'Location not specified'}">Clinic</p>
+                                                        <div class="d-flex align-items-center mb-2">
+                                                            <span class="badge bg-success me-1">4.5 <img src="assets/img/star.svg" width="12"></span>
+                                                            <small class="text-muted ms-2">2376 Patient Stories</small>
+                                                        </div>
+                                                        <a href="#" class="text-primary text-decoration-none fw-bold">View Profile</a>
                                                     </div>
-                                                    <button class="btn btn-primary btn-sm px-4">Consult Now</button>
+                                                    <div class="col-md-3 text-end">
+                                                        <div class="mb-3">
+                                                            <small class="text-muted">Consultation Fee</small>
+                                                            <h4 class="text-success mb-0" th:text="${'₹ ' + (doctor.consultationFee ?: '499') + '/-'}">Fee</h4>
+                                                        </div>
+                                                        <button class="btn btn-primary btn-sm px-4">Consult Now</button>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
 
-                                    <!-- Doctor 2 -->
-                                    <div class="col-12">
-                                        <div class="card border-0 shadow-sm p-4">
-                                            <div class="row align-items-center">
-                                                <div class="col-md-2">
-                                                    <img src="https://via.placeholder.com/100x100/E74C3C/FFFFFF?text=Dr.+K" 
-                                                         class="rounded-circle img-fluid" 
-                                                         alt="Dr. Karugunta Sumohita" 
-                                                         style="width: 80px; height: 80px; object-fit: cover;">
-                                                </div>
-                                                <div class="col-md-7">
-                                                    <h5 class="card-title mb-1">Dr. Karugunta Sumohita</h5>
-                                                    <p class="text-muted mb-1">8 years of Experience</p>
-                                                    <p class="text-muted mb-1">MBBS, MD - DVL</p>
-                                                    <p class="text-muted mb-2">Labelle Weight Loss Clinic, Hyderabad</p>
-                                                    <div class="d-flex align-items-center mb-2">
-                                                        <span class="badge bg-success me-1">4.6 <img src="assets/img/star.svg" width="12"></span>
-                                                        <small class="text-muted ms-2">1267 Patient Stories</small>
-                                                    </div>
-                                                    <a href="#" class="text-primary text-decoration-none fw-bold">View Profile</a>
-                                                </div>
-                                                <div class="col-md-3 text-end">
-                                                    <div class="mb-3">
-                                                        <small class="text-muted">Consultation Fee</small>
-                                                        <h4 class="text-success mb-0">₹ 299/-</h4>
-                                                    </div>
-                                                    <button class="btn btn-primary btn-sm px-4">Consult Now</button>
-                                                </div>
-                                            </div>
-                                        </div>
                                     </div>
-
-                                    <!-- Doctor 3 -->
-                                    <div class="col-12">
-                                        <div class="card border-0 shadow-sm p-4">
-                                            <div class="row align-items-center">
-                                                <div class="col-md-2">
-                                                    <img src="https://via.placeholder.com/100x100/27AE60/FFFFFF?text=Dr.+A" 
-                                                         class="rounded-circle img-fluid" 
-                                                         alt="Dr. Ananya Sharma" 
-                                                         style="width: 80px; height: 80px; object-fit: cover;">
-                                                </div>
-                                                <div class="col-md-7">
-                                                    <h5 class="card-title mb-1">Dr. Ananya Sharma</h5>
-                                                    <p class="text-muted mb-1">12 years of Experience</p>
-                                                    <p class="text-muted mb-1">MBBS, MD - Psychology</p>
-                                                    <p class="text-muted mb-2">Apollo Hospitals, Hyderabad</p>
-                                                    <div class="d-flex align-items-center mb-2">
-                                                        <span class="badge bg-success me-1">4.8 <img src="assets/img/star.svg" width="12"></span>
-                                                        <small class="text-muted ms-2">3420 Patient Stories</small>
-                                                    </div>
-                                                    <a href="#" class="text-primary text-decoration-none fw-bold">View Profile</a>
-                                                </div>
-                                                <div class="col-md-3 text-end">
-                                                    <div class="mb-3">
-                                                        <small class="text-muted">Consultation Fee</small>
-                                                        <h4 class="text-success mb-0">₹ 799/-</h4>
-                                                    </div>
-                                                    <button class="btn btn-primary btn-sm px-4">Consult Now</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Doctor 4 -->
-                                    <div class="col-12">
-                                        <div class="card border-0 shadow-sm p-4">
-                                            <div class="row align-items-center">
-                                                <div class="col-md-2">
-                                                    <img src="https://via.placeholder.com/100x100/9B59B6/FFFFFF?text=Dr.+R" 
-                                                         class="rounded-circle img-fluid" 
-                                                         alt="Dr. Rajesh Kumar" 
-                                                         style="width: 80px; height: 80px; object-fit: cover;">
-                                                </div>
-                                                <div class="col-md-7">
-                                                    <h5 class="card-title mb-1">Dr. Rajesh Kumar</h5>
-                                                    <p class="text-muted mb-1">15 years of Experience</p>
-                                                    <p class="text-muted mb-1">MBBS, MD - Psychiatry</p>
-                                                    <p class="text-muted mb-2">NIMHANS, Bangalore</p>
-                                                    <div class="d-flex align-items-center mb-2">
-                                                        <span class="badge bg-success me-1">4.7 <img src="assets/img/star.svg" width="12"></span>
-                                                        <small class="text-muted ms-2">5678 Patient Stories</small>
-                                                    </div>
-                                                    <a href="#" class="text-primary text-decoration-none fw-bold">View Profile</a>
-                                                </div>
-                                                <div class="col-md-3 text-end">
-                                                    <div class="mb-3">
-                                                        <small class="text-muted">Consultation Fee</small>
-                                                        <h4 class="text-success mb-0">₹ 999/-</h4>
-                                                    </div>
-                                                    <button class="btn btn-primary btn-sm px-4">Consult Now</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Doctor 5 -->
-                                    <div class="col-12">
-                                        <div class="card border-0 shadow-sm p-4">
-                                            <div class="row align-items-center">
-                                                <div class="col-md-2">
-                                                    <img src="https://via.placeholder.com/100x100/F39C12/FFFFFF?text=Dr.+P" 
-                                                         class="rounded-circle img-fluid" 
-                                                         alt="Dr. Priya Menon" 
-                                                         style="width: 80px; height: 80px; object-fit: cover;">
-                                                </div>
-                                                <div class="col-md-7">
-                                                    <h5 class="card-title mb-1">Dr. Priya Menon</h5>
-                                                    <p class="text-muted mb-1">10 years of Experience</p>
-                                                    <p class="text-muted mb-1">MBBS, MD - Clinical Psychology</p>
-                                                    <p class="text-muted mb-2">Fortis Hospital, Mumbai</p>
-                                                    <div class="d-flex align-items-center mb-2">
-                                                        <span class="badge bg-success me-1">4.4 <img src="assets/img/star.svg" width="12"></span>
-                                                        <small class="text-muted ms-2">1890 Patient Stories</small>
-                                                    </div>
-                                                    <a href="#" class="text-primary text-decoration-none fw-bold">View Profile</a>
-                                                </div>
-                                                <div class="col-md-3 text-end">
-                                                    <div class="mb-3">
-                                                        <small class="text-muted">Consultation Fee</small>
-                                                        <h4 class="text-success mb-0">₹ 649/-</h4>
-                                                    </div>
-                                                    <button class="btn btn-primary btn-sm px-4">Consult Now</button>
-                                                </div>
-                                            </div>
-                                        </div>
                                     </div>
                                 </div>
                                 <nav class="mt-4">
