@@ -23,4 +23,5 @@ public class DoctorRegistrationDTO {
     private String gender;
     private String languages; // Comma-separated string
     private MultipartFile profilePicture;
+    private int consultationFee;
 }
