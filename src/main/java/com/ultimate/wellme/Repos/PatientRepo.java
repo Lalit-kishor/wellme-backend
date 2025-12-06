@@ -8,4 +8,6 @@ import com.ultimate.wellme.models.Patient;
 @Repository
 public interface PatientRepo extends JpaRepository<Patient, Integer> {
     Patient findByFirstName(String name);
+
+    Patient findById(Long patientId);
 }

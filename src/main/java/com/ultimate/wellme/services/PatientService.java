@@ -19,5 +19,9 @@ public class PatientService {
         patient.setPassword(passwordEncoder.encode(patient.getPassword()));
         return patientRepo.save(patient);
     }
+
+    public Patient getPatientById(Long patientId) {
+        return patientRepo.findById(patientId);
+    }
     
 }
