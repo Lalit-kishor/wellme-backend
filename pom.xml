@@ -31,7 +31,10 @@
 	</properties>
 	<dependencies>
 
-
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -77,6 +80,26 @@
     		<scope>runtime</scope>
 		</dependency>
 
+		<dependency>
+    		<groupId>io.jsonwebtoken</groupId>
+    		<artifactId>jjwt-api</artifactId>
+    		<version>0.12.6</version>
+		</dependency>
+
+		<dependency>
+    		<groupId>io.jsonwebtoken</groupId>
+    		<artifactId>jjwt-impl</artifactId>
+    		<version>0.12.6</version>
+    		<scope>runtime</scope>
+		</dependency>
+
+		<dependency>
+    		<groupId>io.jsonwebtoken</groupId>
+    		<artifactId>jjwt-jackson</artifactId>
+    		<version>0.12.6</version>
+    		<scope>runtime</scope>
+		</dependency>
+
 		<!-- Cloudinary for image upload and management -->
 		<dependency>
 			<groupId>com.cloudinary</groupId>
@@ -89,6 +112,26 @@
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency> -->
+
+		<dependency>
+    		<groupId>org.springdoc</groupId>
+    		<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+    		<version>2.6.0</version>
+		</dependency>
+
+		<!-- Quartz Scheduler -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-quartz</artifactId>
+		</dependency>
+
+		<!-- Razorpay -->
+		<dependency>
+    		<groupId>com.razorpay</groupId>
+    		<artifactId>razorpay-java</artifactId>
+    		<version>1.4.8</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
