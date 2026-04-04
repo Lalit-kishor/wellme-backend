@@ -4,17 +4,21 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.ultimate.wellme.DTO.DoctorRegistrationDTO;
+import com.ultimate.wellme.DTO.LoginRequest;
+import com.ultimate.wellme.DTO.SignUpRequest;
+import com.ultimate.wellme.config.ApiResponse;
 import com.ultimate.wellme.models.CloudinaryUploadResult;
 import com.ultimate.wellme.models.Doctor;
 import com.ultimate.wellme.models.Patient;
@@ -26,7 +30,7 @@ import com.ultimate.wellme.services.JwtService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 
-@Controller
+@RestController
 public class AuthController {
 
     @Autowired
@@ -42,25 +46,21 @@ public class AuthController {
     public JwtService jwtService;
 
     @PostMapping("/signup")
-    public String signup(@RequestParam String email, @RequestParam String password, @RequestParam String password_repeat) {
-        if (!password.equals(password_repeat)) {
-            return "redirect:/signup?error=passwords_do_not_match";
-        }
+    public ResponseEntity<?> signup(@RequestBody SignUpRequest credentials) {
+       
         // Proceed with signup logic
         User user = new Patient();
 
-        user.setEmail(email);
-        user.setPassword(password);
+        user.setEmail(credentials.getEmail());
+        user.setPassword(credentials.getPassword());
         user.setRole(User.Role.valueOf("PATIENT"));
         appService.saveUser(user);
         
-        return "redirect:/login?success=registered";
+        return new ResponseEntity<ApiResponse>(new ApiResponse(true, "SignUp success"), HttpStatus.OK);
     }
 
-
-
     @PostMapping("/signUpDoctor")
-    public String registerDoctor(@ModelAttribute DoctorRegistrationDTO dto) {
+    public ResponseEntity<?> registerDoctor(@ModelAttribute DoctorRegistrationDTO dto) {
 
         List<String> specializationList = Arrays.stream(dto.getSpecializations().split(",")).map(String::trim).collect(Collectors.toList());
         List<String> languageList = Arrays.stream(dto.getLanguages().split(",")).map(String::trim).collect(Collectors.toList());
@@ -92,24 +92,25 @@ public class AuthController {
         } catch (Exception e) {
             System.out.println("Image upload failed 🥱");
             e.printStackTrace();
+            return new ResponseEntity<ApiResponse>(new ApiResponse(false, "Image Upload failed"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         appService.saveUser(user);
 
-        return "redirect:/login?success=registered";
+        return new ResponseEntity<ApiResponse>(new ApiResponse(true, "Doctor registered successfully."), HttpStatus.OK);
     }
 
     @PostMapping("/login")
-    @ResponseBody
-    public String login(@RequestParam String email, @RequestParam String password, HttpServletResponse response) {
+    public ResponseEntity<?> login(@RequestBody LoginRequest credentials, HttpServletResponse response) {
 
         try {
             
             Authentication authentication = authenticationManager
-                    .authenticate(new UsernamePasswordAuthenticationToken(email, password));
+                    .authenticate(new UsernamePasswordAuthenticationToken(credentials.getEmail(), credentials.getPassword()));
 
             if (authentication.isAuthenticated()) {
-                String jwtToken = jwtService.generateToken(email);
+                String jwtToken = jwtService.generateToken(credentials.getEmail());
+
 
                 Cookie cookie = new Cookie("jwt", jwtToken);
                 cookie.setHttpOnly(true);
@@ -117,14 +118,13 @@ public class AuthController {
                 cookie.setPath("/");
                 response.addCookie(cookie);
 
-                return jwtToken;
+                return new ResponseEntity<ApiResponse>(new ApiResponse(true, "Login success"), HttpStatus.OK);
             }
 
         } catch (Exception e) {
-            return e.getMessage();
+            return new ResponseEntity<ApiResponse>(new ApiResponse(false, "Exception occured during Login= " + e.getMessage()), HttpStatus.BAD_REQUEST);
         }
-        
 
-        return "Login Failed";
+        return new ResponseEntity<ApiResponse>(new ApiResponse(false, "Login failed"), HttpStatus.UNAUTHORIZED);
     }
 }
