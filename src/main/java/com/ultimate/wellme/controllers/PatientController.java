@@ -1,5 +1,7 @@
 package com.ultimate.wellme.controllers;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,8 +40,8 @@ public class PatientController {
     private AppointmentService appointmentService;
     
     @PostMapping("/bookAppointment")
-    public ResponseEntity<ApiResponse> bookAppointment(@RequestBody AppointmentDTO appointmentDTO, HttpServletRequest request) {
-
+    public ResponseEntity<?> bookAppointment(@RequestBody AppointmentDTO appointmentDTO, HttpServletRequest request) {
+        
         try {
             String token = null;
             if(request.getCookies() != null) {
@@ -82,9 +84,16 @@ public class PatientController {
             newAppointment.setAppointmentSchedule(schedule.get());
             newAppointment.setStatus(Appointment.AppointmentStatus.PENDING);
     
-            appointmentService.save(newAppointment);
+            Appointment savedAppointment = appointmentService.save(newAppointment);
     
-            return new ResponseEntity<ApiResponse> (new ApiResponse(true, "Appointment Booked Successfully."), HttpStatus.OK);
+            // Return appointmentId and consultation fee for payment processing
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("message", "Appointment Created. Please proceed with payment.");
+            response.put("appointmentId", savedAppointment.getAppointmentId());
+            response.put("consultationFee", doctor.getConsultationFee());
+            
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<ApiResponse>(new ApiResponse(false, "Appointment Booking Failed..." + e.getMessage()), HttpStatus.BAD_REQUEST);
         }
