@@ -2,6 +2,7 @@ package com.ultimate.wellme.DTO;
 
 import java.time.LocalTime;
 
+import com.ultimate.wellme.models.DayOfWeek;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,7 +13,9 @@ import lombok.Setter;
 public class DoctorAvailabilityDTO {
     
     private Long doctorId;
-    private String day;
+
+    private DayOfWeek day;
+
     private LocalTime startTime;
     private LocalTime endTime;
     private int slotDurationMinutes;
