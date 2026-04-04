@@ -15,4 +15,17 @@ public class AppointmentService {
     public Appointment save(Appointment appointment) {
         return appointmentRepo.save(appointment);
     }
+
+    public Appointment updateAppointmentStatus(Long appointmentId, Appointment.AppointmentStatus status) {
+        Appointment appointment = appointmentRepo.findById(appointmentId)
+                .orElseThrow(() -> new RuntimeException("Appointment not found with id: " + appointmentId));
+        appointment.setStatus(status);
+        System.out.println("In updateAppointmentStatus function");
+        return appointmentRepo.save(appointment);
+    }
+
+    public Appointment getAppointmentById(Long appointmentId) {
+        return appointmentRepo.findById(appointmentId)
+                .orElseThrow(() -> new RuntimeException("Appointment not found with id: " + appointmentId));
+    }
 }
