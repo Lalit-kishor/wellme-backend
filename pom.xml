@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.5.5</version>
+		<version>3.5.8</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.ultimate</groupId>
@@ -130,6 +130,19 @@
     		<groupId>com.razorpay</groupId>
     		<artifactId>razorpay-java</artifactId>
     		<version>1.4.8</version>
+		</dependency>
+
+		<!-- CashFree Payment Gateway-->
+		<dependency>
+    		<groupId>com.cashfree.pg.java</groupId>
+    		<artifactId>cashfree_pg</artifactId>
+    		<version>4.3.10</version>
+		</dependency>
+
+		<dependency>
+    		<groupId>com.google.code.gson</groupId>
+    		<artifactId>gson</artifactId>
+    		<version>2.10.1</version>
 		</dependency>
 
 	</dependencies>
