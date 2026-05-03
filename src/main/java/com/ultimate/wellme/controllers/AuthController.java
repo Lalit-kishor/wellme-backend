@@ -74,6 +74,7 @@ public class AuthController {
         ((Doctor) user).setMedicalLicenseNumber(dto.getMedicalLicenseNumber());
         ((Doctor) user).setSpecializations(specializationList);
         ((Doctor) user).setClinicAddress(dto.getClinicAddress());
+        ((Doctor) user).setCity(dto.getCity());
         ((Doctor) user).setYearsOfExperience(dto.getYearsOfExperience());
         ((Doctor) user).setGender(dto.getGender());
         ((Doctor) user).setLanguages(languageList);
