@@ -19,6 +19,7 @@ public class DoctorRegistrationDTO {
     private String medicalLicenseNumber;
     private String specializations; // Comma-separated string
     private String clinicAddress;
+    private String city;
     private int yearsOfExperience;
     private String gender;
     private String languages; // Comma-separated string
