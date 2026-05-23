@@ -1,11 +1,21 @@
 package com.ultimate.wellme.controllers;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.ultimate.wellme.models.Doctor;
+import com.ultimate.wellme.services.DoctorService;
 
 @Controller
 public class MainController {
+
+    @Autowired
+    private DoctorService doctorService;
 
     @RequestMapping(value = {"/", "/home", "/index"})
     public String landing() {
@@ -57,8 +67,10 @@ public class MainController {
 
     @RequestMapping("/catalog-page")
     @PreAuthorize("isAuthenticated()")
-    public String catalogPage() {
-        System.out.println("Accessed catalog page");
+    public String catalogPage(Model model) {
+        
+        List<Doctor> doctorList = doctorService.getAllDoctors();
+        model.addAttribute("doctorList", doctorList);
         return "catalog-page";
     }
 }

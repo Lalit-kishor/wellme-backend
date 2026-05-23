@@ -1,0 +1,28 @@
+1.) Important: Security Warning
+Since you are making this endpoint "Public" to Spring Security, literally anyone on the internet can send a POST request to it. You must protect it using Signature Verification.
+
+As we implemented in your WebhookController, the verifySignature method acts as the "password" for this endpoint. It ensures that only requests actually coming from Cashfree are processed.
+
+Filter Level (Spring Security): Permits the request to enter.
+
+Controller Level (Your Code): Verifies the signature to ensure the data is authentic.
+
+Best Practice for Production
+
+
+In a production environment, you should also consider IP Whitelisting. You can configure Spring Security to only allow requests to that specific URL if they come from Cashfree’s known IP addresses:
+
+///////////////////////////////////////////////////////////////////////////////////
+
+💡 Bonus Idea (Recruiter Magnet)
+
+Add:
+
+Auto email reminder 30 mins before
+
+Consultation summary field for doctor
+
+Rating system
+
+Downloadable prescription PDF
+
