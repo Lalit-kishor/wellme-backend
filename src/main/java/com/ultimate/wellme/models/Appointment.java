@@ -45,7 +45,7 @@ public class Appointment {
     private Long appointmentId;
 
     public enum AppointmentStatus {
-        PENDING, CONFIRMED, CANCELLED, COMPLETED, NO_SHOW, RESCHEDULED
+        PENDING, CONFIRMED, CANCELLED, COMPLETED, NO_SHOW, RESCHEDULED, ONGOING
     }
 
     @Enumerated(EnumType.STRING)

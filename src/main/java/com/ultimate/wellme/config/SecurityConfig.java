@@ -7,6 +7,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -20,6 +21,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     private static final String[] PUBLIC_ENDPOINTS = {
+        "/**",
         "/signup",
         "/login",
         "/signUpDoctor", 
@@ -33,8 +35,10 @@ public class SecurityConfig {
         "/assets/**",
         "/swagger-ui.html",
         "/swagger-ui/**",
-        "/v3/api-docs/**"
-
+        "/v3/api-docs/**",
+        "/api/webhooks/**",
+        "/api/payment/**",
+        "/error"
     };
 
     @Autowired
@@ -47,6 +51,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http.csrf(customizer -> customizer.disable())
+            .cors(Customizer.withDefaults())
             .authorizeHttpRequests(request -> request.requestMatchers(PUBLIC_ENDPOINTS).permitAll()
             .anyRequest().authenticated()
             )

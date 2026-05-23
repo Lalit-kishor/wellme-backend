@@ -35,11 +35,9 @@ public interface AppointmentScheduleRepo extends JpaRepository<AppointmentSchedu
     @Query("SELECT COUNT(a) FROM AppointmentSchedule a WHERE a.doctor = :doctor AND a.status = :status AND a.isDeleted = false")
     long countByDoctorAndStatus(@Param("doctor") User doctor, @Param("status") AppointmentStatus status);
 
-
     // Find all upcoming available slots for a particular doctor
     @Query("select a from AppointmentSchedule a where a.doctor.id= :doctorId and a.date >= :currentDate and a.isDeleted=false and a.status=com.ultimate.wellme.models.AppointmentStatus.AVAILABLE")
-    List<AppointmentSchedule> findUpcomingAvailableSlots(@Param("currentDate") LocalDate currentDate,
-            @Param("doctorId") Long doctorId);
+    List<AppointmentSchedule> findUpcomingAvailableSlots(@Param("currentDate") LocalDate currentDate, @Param("doctorId") Long doctorId);
 }
 
 
@@ -47,4 +45,4 @@ public interface AppointmentScheduleRepo extends JpaRepository<AppointmentSchedu
 
 // JPQL:
 // use entity fields/relations (a.doctor.id, a.patientId, a.isDeleted).
-// Native SQL: use table/column names (doctor_id, patient_id, is_deleted)
+// Native SQL: use table/column names (doctor_id, patient_id, is_deleted).
