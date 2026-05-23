@@ -23,7 +23,7 @@ public class Transaction {
     private Long tId;
 
     @ManyToOne
-    @JoinColumn(name = "appointmentId")
+    @JoinColumn(name = "appointmentId", unique = true, nullable = false)
     private Appointment appointment;
 
     private String status; 

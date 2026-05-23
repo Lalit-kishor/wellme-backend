@@ -13,4 +13,6 @@ public interface DoctorAvailabilityRepo extends JpaRepository<DoctorAvailability
     List<DoctorAvailability> findByDoctor(User doctor);
     
     List<DoctorAvailability> findByDoctorAndDay(User doctor, String day);
+
+    List<DoctorAvailability> findByActiveTrue();
 }

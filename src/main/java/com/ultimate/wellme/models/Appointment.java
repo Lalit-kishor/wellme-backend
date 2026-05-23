@@ -3,7 +3,9 @@ package com.ultimate.wellme.models;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -14,6 +16,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
@@ -96,4 +99,9 @@ public class Appointment {
     public boolean isValidDate() {
         return date == null || !date.isBefore(LocalDate.now());
     }
+
+    @OneToMany(mappedBy = "appointment", cascade = CascadeType.ALL)
+    private List<Order> orders;
+
+    private String meetingRoomId;
 }
