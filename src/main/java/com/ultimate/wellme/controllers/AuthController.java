@@ -75,6 +75,7 @@ public class AuthController {
         ((Doctor) user).setSpecializations(specializationList);
         ((Doctor) user).setClinicAddress(dto.getClinicAddress());
         ((Doctor) user).setCity(dto.getCity());
+        System.out.println("city: " + dto.getCity());
         ((Doctor) user).setYearsOfExperience(dto.getYearsOfExperience());
         ((Doctor) user).setGender(dto.getGender());
         ((Doctor) user).setLanguages(languageList);
@@ -123,6 +124,7 @@ public class AuthController {
             }
 
         } catch (Exception e) {
+            e.printStackTrace();
             return new ResponseEntity<ApiResponse>(new ApiResponse(false, "Exception occured during Login= " + e.getMessage()), HttpStatus.BAD_REQUEST);
         }
 

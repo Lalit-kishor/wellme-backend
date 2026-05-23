@@ -1,7 +1,6 @@
 package com.ultimate.wellme.config;
 
 import java.io.IOException;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -11,10 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-
-import com.ultimate.wellme.models.User;
 import com.ultimate.wellme.services.AppService;
-import com.ultimate.wellme.services.DoctorService;
 import com.ultimate.wellme.services.JwtService;
 
 import io.jsonwebtoken.ExpiredJwtException;
@@ -33,17 +29,14 @@ public class JwtFilter extends OncePerRequestFilter {
     @Autowired
     ApplicationContext context;
 
-    @Autowired
-    private DoctorService doctorService;
-
     @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+    protected boolean shouldNotFilter(@SuppressWarnings("null") HttpServletRequest request) throws ServletException {
         String path = request.getRequestURI();
-        return path.equals("/login") || path.equals("/signup") || path.equals("/signUpDoctor");
+        return path.equals("/login") || path.equals("/signup") || path.equals("/signUpDoctor") || path.startsWith("/api/webhooks/");
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+    protected void doFilterInternal(@SuppressWarnings("null") HttpServletRequest request, @SuppressWarnings("null") HttpServletResponse response, @SuppressWarnings("null") FilterChain filterChain)
             throws ServletException, IOException {
 
                 System.out.println("Inside JwtFilter");
@@ -58,7 +51,7 @@ public class JwtFilter extends OncePerRequestFilter {
                     }
                 }
 
-                System.out.println("Token in JwtFilter is: " + token);
+                // System.out.println("Token in JwtFilter is: " + token);
 
                 if(token != null) {
 
@@ -79,7 +72,7 @@ public class JwtFilter extends OncePerRequestFilter {
                 }
 
 
-                System.out.println("userName_id in jwtFilter is: " + userName_id);
+                // System.out.println("userName_id in jwtFilter is: " + userName_id);
 
                 if(userName_id != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
@@ -88,12 +81,12 @@ public class JwtFilter extends OncePerRequestFilter {
                     // System.out.println(optionalUser.get().getEmail());
                     UserDetails userDetails = context.getBean(AppService.class).loadUserByUsername(userName_id);
 
-                    System.out.println("UserDetails loaded successfully ✅");
+                    // System.out.println("UserDetails loaded successfully ✅");
 
                     try {
                         if(jwtService.validateToken(token, userDetails)) {
                             
-                            System.out.println("Token validation successful");
+                            // System.out.println("Token validation successful");
 
                             UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     
