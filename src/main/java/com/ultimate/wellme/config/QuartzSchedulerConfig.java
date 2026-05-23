@@ -41,7 +41,7 @@ public class QuartzSchedulerConfig {
                     .forJob(slotGenerationJobDetail())
                     .withIdentity("slotGenerationManualTrigger")
                     .withDescription("Manual trigger for testing")
-                    .withSchedule(SimpleScheduleBuilder.simpleSchedule().withIntervalInMinutes(5).repeatForever())
+                    .withSchedule(SimpleScheduleBuilder.simpleSchedule().withIntervalInMinutes(120).repeatForever())
                     .build();
     }
 }
