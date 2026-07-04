@@ -14,8 +14,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.ultimate.wellme.DTO.DoctorAvailabilityDTO;
+import com.ultimate.wellme.DTO.DoctorAvailabilityDetails;
 import com.ultimate.wellme.Repos.AppointmentScheduleRepo;
+import com.ultimate.wellme.Repos.UserRepo;
 import com.ultimate.wellme.config.ApiResponse;
 import com.ultimate.wellme.models.AppointmentSchedule;
 import com.ultimate.wellme.models.Doctor;
@@ -42,9 +47,14 @@ public class DoctorController {
 
     @Autowired
     private AppointmentScheduleRepo appointmentScheduleRepo;
+
+    @Autowired
+    private UserRepo userRepo;
     
     @PostMapping("/addAvailability")
-    public ResponseEntity<ApiResponse> addAvailability(@RequestBody List<DoctorAvailabilityDTO> doctorAvailabilityDTO, HttpServletRequest request) {
+    public ResponseEntity<ApiResponse> addAvailability(@RequestBody DoctorAvailabilityDetails doctorAvailabilityDetails, HttpServletRequest request) {
+
+        System.out.println("Data received from frontend: " + doctorAvailabilityDetails);
 
         try {
             // Get the JWT token from request
@@ -61,25 +71,28 @@ public class DoctorController {
 
             Long doctorId = jwtService.extractUserId(token);
 
+            User doctor = userRepo.getReferenceById(doctorId);
 
-            Optional<User> doctor = doctorService.getDoctorById(doctorId);
 
-            if(!doctor.isPresent()) return new ResponseEntity<ApiResponse>(new ApiResponse(false, "Doctor Not found"),
-                        HttpStatus.NOT_FOUND);
+            // Optional<User> doctor = doctorService.getDoctorById(doctorId);
+
+            // if(!doctor.isPresent()) return new ResponseEntity<ApiResponse>(new ApiResponse(false, "Doctor Not found"),
+            //             HttpStatus.NOT_FOUND);
 
             // 👉🏽 String role = authentication.getAuthorities().iterator().next().getAuthority();
-            
+
+
+
+            List<DoctorAvailabilityDTO> availabilityDTO = doctorAvailabilityDetails.getAvailability();
             List<DoctorAvailability> availabilities = new ArrayList<>();
 
-            for(DoctorAvailabilityDTO  dto: doctorAvailabilityDTO) {
+            for(DoctorAvailabilityDTO  dto: availabilityDTO) {
                 DoctorAvailability doctorAvailability = new DoctorAvailability();
                 doctorAvailability.setDay(dto.getDay());
                 doctorAvailability.setStartTime(dto.getStartTime());
                 doctorAvailability.setEndTime(dto.getEndTime());
-                doctorAvailability.setSlotDurationMinutes(dto.getSlotDurationMinutes());
-                doctorAvailability.setMaxPatientsPerSlot(dto.getMaxPatientsPerSlot());
                 doctorAvailability.setActive(dto.isActive());
-                doctorAvailability.setDoctor(doctor.get());
+                doctorAvailability.setDoctor(doctor);
 
                 availabilities.add(doctorAvailability);
             }
@@ -90,7 +103,7 @@ public class DoctorController {
             return new ResponseEntity<ApiResponse> (new ApiResponse(true, "Availabilities added"), HttpStatus.CREATED);
     
         } catch (Exception e) {
-            System.out.println("Failed adding Availability");
+            System.out.println("Failed adding Availability:    " + e.getMessage());
             return new ResponseEntity<ApiResponse> (new ApiResponse(false, e.getMessage()), HttpStatus.BAD_REQUEST);
         }
 
@@ -99,6 +112,7 @@ public class DoctorController {
     @GetMapping("/getAllDoctors")
     public ResponseEntity<?> getAllDoctors() {
         List<Doctor> doctorList= doctorService.getAllDoctors();
+        System.out.println("Total Doctors: "+ doctorList.size());
         return new ResponseEntity<>(doctorList, HttpStatus.OK);
     }
 
