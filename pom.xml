@@ -100,6 +100,12 @@
     		<scope>runtime</scope>
 		</dependency>
 
+		<dependency>
+			<groupId>com.fasterxml.jackson.datatype</groupId>
+			<artifactId>jackson-datatype-jsr310</artifactId>
+			<version>2.20.0</version>
+		</dependency>
+
 		<!-- Cloudinary for image upload and management -->
 		<dependency>
 			<groupId>com.cloudinary</groupId>
@@ -143,6 +149,18 @@
     		<groupId>com.google.code.gson</groupId>
     		<artifactId>gson</artifactId>
     		<version>2.10.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.flywaydb</groupId>
+			<artifactId>flyway-core</artifactId>
+			<version>10.20.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.flywaydb</groupId>
+			<artifactId>flyway-mysql</artifactId>
+			<version>10.20.1</version>
 		</dependency>
 
 	</dependencies>
