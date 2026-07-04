@@ -1,4 +1,5 @@
 package com.ultimate.wellme.controllers;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -47,7 +48,7 @@ public class AuthController {
 
     @PostMapping("/signup")
     public ResponseEntity<?> signup(@RequestBody SignUpRequest credentials) {
-       
+
         // Proceed with signup logic
         User user = new Patient();
 
@@ -55,7 +56,7 @@ public class AuthController {
         user.setPassword(credentials.getPassword());
         user.setRole(User.Role.valueOf("PATIENT"));
         appService.saveUser(user);
-        
+
         return new ResponseEntity<ApiResponse>(new ApiResponse(true, "SignUp success"), HttpStatus.OK);
     }
 
@@ -84,7 +85,7 @@ public class AuthController {
         // upload image to Cloudinary
         try {
             MultipartFile profilePicture = dto.getProfilePicture();
-            
+
             if (profilePicture != null && !profilePicture.isEmpty()) {
                 CloudinaryUploadResult uploadResult = cloudinaryService.uploadImage(profilePicture);
                 user.setProfileImage(uploadResult);
@@ -106,7 +107,7 @@ public class AuthController {
     public ResponseEntity<?> login(@RequestBody LoginRequest credentials, HttpServletResponse response) {
 
         try {
-            
+
             Authentication authentication = authenticationManager
                     .authenticate(new UsernamePasswordAuthenticationToken(credentials.getEmail(), credentials.getPassword()));
 
@@ -125,7 +126,9 @@ public class AuthController {
 
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseEntity<ApiResponse>(new ApiResponse(false, "Exception occured during Login= " + e.getMessage()), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<ApiResponse>(
+                    new ApiResponse(false, "Exception occured during Login= " + e.getMessage()),
+                    HttpStatus.BAD_REQUEST);
         }
 
         return new ResponseEntity<ApiResponse>(new ApiResponse(false, "Login failed"), HttpStatus.UNAUTHORIZED);
