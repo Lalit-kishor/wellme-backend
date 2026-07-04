@@ -3,6 +3,7 @@ package com.ultimate.wellme.models;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -61,12 +62,14 @@ public class DoctorAvailability {
     @NotNull
     @Min(value = 5, message = "Slot duration must be at least 5 minutes")
     @Max(value = 180, message = "Slot duration cannot exceed 3 hours")
-    private int slotDurationMinutes;
+    @Column(columnDefinition = "INT DEFAULT 30")
+    private int slotDurationMinutes = 30;
 
     @NotNull
     @Min(value = 1, message = "At least 1 patient per slot required")
     @Max(value = 10, message = "Maximum 10 patients per slot allowed")
-    private int maxPatientsPerSlot;
+    @Column(columnDefinition = "INT DEFAULT 1")
+    private int maxPatientsPerSlot = 1;
 
     private boolean active;   // variable name isActive is not  recommended ❌ because there is an issue with boolean fields naming convention in Java.
 
