@@ -8,12 +8,18 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.ultimate.wellme.models.User.Role;
+
 public class UserPrincipal implements UserDetails {
 
     private final User user;
 
     public UserPrincipal(User user) {
         this.user = user;
+    }
+
+    public Role getUserRole() {
+        return user.getRole();
     }
 
     @Override
