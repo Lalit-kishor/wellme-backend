@@ -2,6 +2,7 @@ package com.ultimate.wellme.controllers;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,20 +11,25 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.web.csrf.CsrfToken;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.ultimate.wellme.DTO.DoctorRegistrationDTO;
 import com.ultimate.wellme.DTO.LoginRequest;
+import com.ultimate.wellme.DTO.LoginResponseDTO;
 import com.ultimate.wellme.DTO.SignUpRequest;
 import com.ultimate.wellme.config.ApiResponse;
 import com.ultimate.wellme.models.CloudinaryUploadResult;
 import com.ultimate.wellme.models.Doctor;
 import com.ultimate.wellme.models.Patient;
 import com.ultimate.wellme.models.User;
+import com.ultimate.wellme.models.UserPrincipal;
 import com.ultimate.wellme.services.AppService;
 import com.ultimate.wellme.services.CloudinaryService;
 import com.ultimate.wellme.services.JwtService;
@@ -32,6 +38,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
+@RequestMapping("/api/v1/auth")
 public class AuthController {
 
     @Autowired
@@ -112,6 +119,9 @@ public class AuthController {
                     .authenticate(new UsernamePasswordAuthenticationToken(credentials.getEmail(), credentials.getPassword()));
 
             if (authentication.isAuthenticated()) {
+
+                UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
+                
                 String jwtToken = jwtService.generateToken(credentials.getEmail());
 
 
@@ -119,18 +129,44 @@ public class AuthController {
                 cookie.setHttpOnly(true);
                 cookie.setSecure(false);
                 cookie.setPath("/");
+                cookie.setMaxAge(2*60*60);
                 response.addCookie(cookie);
 
-                return new ResponseEntity<ApiResponse>(new ApiResponse(true, "Login success"), HttpStatus.OK);
+                return ResponseEntity.ok(new LoginResponseDTO(true, "Login success", principal.getUsername(), principal.getUserRole().toString()));
             }
 
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseEntity<ApiResponse>(
-                    new ApiResponse(false, "Exception occured during Login= " + e.getMessage()),
-                    HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(
+                    new LoginResponseDTO(false, "Error occured during login " + e.getMessage(), null, null),
+                HttpStatus.BAD_REQUEST);
         }
 
-        return new ResponseEntity<ApiResponse>(new ApiResponse(false, "Login failed"), HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(
+                new LoginResponseDTO(false, "Login failed ", null, null),
+                HttpStatus.UNAUTHORIZED);
+    }
+
+
+    // Below one
+    // matters a lot—you'll need
+    // it regardless, because if
+    // the user
+    // refreshes the page,
+    // Angular loses
+    // any in-memory role info.Calling /me on
+    // app startup re-establishes"who is logged in"
+    // using the cookie that's
+    // already there.I'd
+    // implement both—
+    // role from
+    // login response for
+    // immediate use, and/me for page-
+    // refresh recovery.
+
+    @GetMapping("/me")
+    public ResponseEntity<?> getCurrentUser(Authentication authentication, CsrfToken csrfToken) {
+        System.out.println("CSRF Token resolved: " + (csrfToken != null ? csrfToken.getToken() : "NULL"));
+        return ResponseEntity.ok(Map.of("email", authentication.getName(), "role", authentication.getAuthorities()));
     }
 }

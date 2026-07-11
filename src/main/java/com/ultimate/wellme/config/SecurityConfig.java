@@ -15,6 +15,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -50,10 +52,22 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-        http.csrf(customizer -> customizer.disable())
+        http.csrf(csrf -> csrf
+                    .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())  // Spring generates a CSRF token and
+                                                                                    // stores it in a cookie named
+                                                                                    // XSRF-TOKEN. It's not httpOnly
+                                                                                    // (unlike your JWT cookie), because
+                                                                                    // Angular's JS needs to read it and
+                                                                                    // send it back in a header.
+                    .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler())
+                    .ignoringRequestMatchers("/api/v1/auth/login", "/api/v1/auth/signup", "api/v1/auth/signUpDoctor")
+        )
             .cors(Customizer.withDefaults())
-            .authorizeHttpRequests(request -> request.requestMatchers(PUBLIC_ENDPOINTS).permitAll()
-            .anyRequest().authenticated()
+            .authorizeHttpRequests(request -> request.requestMatchers("/api/v1/auth/login", "/api/v1/auth/signup", "api/v1/auth/signUpDoctor").permitAll()
+                                                    .requestMatchers("/api/v1/patient/**").hasAnyRole("PATIENT", "ADMIN")
+                                                    .requestMatchers("/api/v1/doctor/**").hasAnyRole("DOCTOR", "ADMIN")
+                                                    .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
+                                                    .anyRequest().authenticated()
             )
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
