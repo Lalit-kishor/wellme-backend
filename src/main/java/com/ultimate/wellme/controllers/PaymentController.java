@@ -20,7 +20,7 @@ import com.ultimate.wellme.services.AppointmentService;
 import com.ultimate.wellme.services.CashfreeService;
 
 @RestController
-@RequestMapping("/api/payment")
+@RequestMapping("/api/v1/payment")
 @CrossOrigin
 public class PaymentController {
 

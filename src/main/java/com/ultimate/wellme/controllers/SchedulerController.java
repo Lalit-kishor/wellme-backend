@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ultimate.wellme.config.ApiResponse;
 
 @RestController
-@RequestMapping("/scheduler")
+@RequestMapping("/api/v1/scheduler")
 public class SchedulerController {
 
     @Autowired

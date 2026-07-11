@@ -17,7 +17,7 @@ import com.ultimate.wellme.services.PaymentService;
 import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
-@RequestMapping("/api/webhooks")
+@RequestMapping("/api/v1/webhooks")
 public class WebhookController {
     
     @Value("${cashfree.app.id}")
