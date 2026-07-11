@@ -8,15 +8,15 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.ultimate.wellme.DTO.DoctorAvailabilityDTO;
 import com.ultimate.wellme.DTO.DoctorAvailabilityDetails;
 import com.ultimate.wellme.Repos.AppointmentScheduleRepo;
@@ -34,6 +34,8 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
+@RequestMapping("/api/v1/doctor")
+@EnableMethodSecurity(prePostEnabled = true)
 public class DoctorController {
 
     @Autowired
@@ -51,6 +53,7 @@ public class DoctorController {
     @Autowired
     private UserRepo userRepo;
     
+    @PreAuthorize("hasRole('DOCTOR')")
     @PostMapping("/addAvailability")
     public ResponseEntity<ApiResponse> addAvailability(@RequestBody DoctorAvailabilityDetails doctorAvailabilityDetails, HttpServletRequest request) {
 
