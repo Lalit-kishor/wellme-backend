@@ -3,6 +3,7 @@ package com.ultimate.wellme.models;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 import lombok.Getter;
@@ -23,6 +24,9 @@ public class Patient extends User{
     private String gender;
     private int credits;
 
+    @Column(name="blood_group", length = 5)
+    private String bloodGroup;
+    
     @OneToMany(mappedBy = "patient")
     private List<Appointment> appointments = new ArrayList<>();
 }
