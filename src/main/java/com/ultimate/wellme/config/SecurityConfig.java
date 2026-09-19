@@ -65,7 +65,8 @@ public class SecurityConfig {
             .cors(Customizer.withDefaults())
             .authorizeHttpRequests(request -> request.requestMatchers("/api/v1/auth/login", "/api/v1/auth/signup", "api/v1/auth/signUpDoctor").permitAll()
                                                     .requestMatchers("/api/v1/patient/**").hasAnyRole("PATIENT", "ADMIN")
-                                                    .requestMatchers("/api/v1/doctor/**").hasAnyRole("DOCTOR", "ADMIN")
+                                                    .requestMatchers("/api/v1/doctor/**").hasAnyRole("PATIENT", "DOCTOR", "ADMIN")
+                                            
                                                     .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
                                                     .anyRequest().authenticated()
             )
