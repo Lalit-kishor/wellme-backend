@@ -1,9 +1,7 @@
 package com.ultimate.wellme.controllers;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,10 +18,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ultimate.wellme.DTO.DoctorAvailabilityDTO;
 import com.ultimate.wellme.DTO.DoctorAvailabilityDetails;
+import com.ultimate.wellme.DTO.DoctorProfileResponse;
+import com.ultimate.wellme.DTO.DoctorProfileUpdateRequest;
+import com.ultimate.wellme.DTO.SlotResponse;
 import com.ultimate.wellme.Repos.AppointmentScheduleRepo;
 import com.ultimate.wellme.Repos.UserRepo;
 import com.ultimate.wellme.config.ApiResponse;
-import com.ultimate.wellme.models.AppointmentSchedule;
 import com.ultimate.wellme.models.Doctor;
 import com.ultimate.wellme.models.DoctorAvailability;
 import com.ultimate.wellme.models.User;
@@ -32,6 +33,7 @@ import com.ultimate.wellme.services.JwtService;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/v1/doctor")
@@ -119,22 +121,22 @@ public class DoctorController {
         return new ResponseEntity<>(doctorList, HttpStatus.OK);
     }
 
-    @GetMapping("/getDoctorDetail/{doctor_id}")
-    public ResponseEntity<?> getDoctorDetail(@PathVariable Long doctor_id) {
-        Optional<User> optional_doctor = doctorService.getDoctorById(doctor_id);
-
-        if(optional_doctor.isPresent()) {
-            User doctor = optional_doctor.get();
-            return new ResponseEntity<>(doctor, HttpStatus.OK);
-        }
-
-        return new ResponseEntity<>(new ApiResponse(false, "Doctor not found"), HttpStatus.NOT_FOUND);
+    @GetMapping("/{doctor_id}")
+    public ResponseEntity<DoctorProfileResponse> getDoctorDetail(@PathVariable Long doctor_id) {
+       return ResponseEntity.ok(doctorService.getProfile(doctor_id));
     }
 
-    @GetMapping("/getDoctorSlots/{doctor_id}")
-    public ResponseEntity<?> getDoctorSlots(@PathVariable Long doctor_id) {
-        List<AppointmentSchedule> schedules = appointmentScheduleRepo.findUpcomingAvailableSlots(LocalDate.now(), doctor_id);
+    @GetMapping("/{id}/slots")
+    public ResponseEntity<List<SlotResponse>> getUpcomingSlots(@PathVariable Long id) {
+        return ResponseEntity.ok(doctorService.getUpcomingSlots(id));
+    }
 
-        return new ResponseEntity<>(schedules, HttpStatus.OK);
+    @PatchMapping("/{id}")
+    @PreAuthorize("#id == authentication.principal.id or hasRole('ADMIN')")
+    public ResponseEntity<DoctorProfileResponse> updateProfile(
+        @PathVariable Long id,
+        @Valid @RequestBody DoctorProfileUpdateRequest request
+    ) {
+        return ResponseEntity.ok(doctorService.updateProfile(id, request));
     }
 }
