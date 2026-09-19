@@ -9,6 +9,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +22,8 @@ import com.ultimate.wellme.models.AppointmentSchedule;
 import com.ultimate.wellme.models.Doctor;
 import com.ultimate.wellme.models.User;
 import com.ultimate.wellme.DTO.AppointmentDTO;
+import com.ultimate.wellme.DTO.PatientProfileResponse;
+import com.ultimate.wellme.DTO.PatientProfileUpdateRequest;
 import com.ultimate.wellme.Repos.AppointmentScheduleRepo;
 import com.ultimate.wellme.config.ApiResponse;
 import com.ultimate.wellme.services.AppointmentService;
@@ -26,6 +31,7 @@ import com.ultimate.wellme.services.JwtService;
 import com.ultimate.wellme.services.PatientService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/v1/patient")
@@ -60,7 +66,7 @@ public class PatientController {
             }
             // Extract Patient Info
             Long patientId = jwtService.extractUserId(token);
-            User patient_user = patientService.getPatientById(patientId);
+            User patient_user = patientService.findOrThrow(patientId);
             
             System.out.println(appointmentDTO.getScheduleId());
 
@@ -103,5 +109,19 @@ public class PatientController {
         } catch (Exception e) {
             return new ResponseEntity<ApiResponse>(new ApiResponse(false, "Appointment Booking Failed..." + e.getMessage()), HttpStatus.BAD_REQUEST);
         }
+    }
+
+     @GetMapping("/{id}")
+    public ResponseEntity<PatientProfileResponse> getProfile(@PathVariable Long id) {
+        return ResponseEntity.ok(patientService.getProfile(id));
+    }
+ 
+    @PatchMapping("/{id}")
+    @PreAuthorize("#id == authentication.principal.id or hasRole('ADMIN')")
+    public ResponseEntity<PatientProfileResponse> updateProfile(
+        @PathVariable Long id,
+        @Valid @RequestBody PatientProfileUpdateRequest request
+    ) {
+        return ResponseEntity.ok(patientService.updateProfile(id, request));
     }
 }
