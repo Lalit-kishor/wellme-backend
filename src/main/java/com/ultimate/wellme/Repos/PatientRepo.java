@@ -6,8 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.ultimate.wellme.models.Patient;
 
 @Repository
-public interface PatientRepo extends JpaRepository<Patient, Integer> {
+public interface PatientRepo extends JpaRepository<Patient, Long> {
     Patient findByFirstName(String name);
-
-    Patient findById(Long patientId);
 }
