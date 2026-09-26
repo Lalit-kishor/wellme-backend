@@ -1,5 +1,6 @@
 package com.ultimate.wellme.controllers;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,12 +55,9 @@ public class DoctorController {
 
     @Autowired
     private UserRepo userRepo;
-    
     @PreAuthorize("hasRole('DOCTOR')")
     @PostMapping("/addAvailability")
     public ResponseEntity<ApiResponse> addAvailability(@RequestBody DoctorAvailabilityDetails doctorAvailabilityDetails, HttpServletRequest request) {
-
-        System.out.println("Data received from frontend: " + doctorAvailabilityDetails);
 
         try {
             // Get the JWT token from request
